@@ -11,6 +11,11 @@ const staticsPath = path.join(__dirname, './dist');
 const extractCSS = new ExtractTextPlugin({ filename: 'style.css', disable: false, allChunks: true });
 
 const plugins = [
+  new webpack.DefinePlugin({
+    'process.env':{
+      'NODE_ENV': JSON.stringify(nodeEnv)
+    }
+  }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: Infinity,
@@ -78,7 +83,8 @@ module.exports = {
           {
             loader: 'babel-loader',
             query: {
-              cacheDirectory: true
+              cacheDirectory: true,
+              presets:['es2015','react']
             }
           }
         ]
