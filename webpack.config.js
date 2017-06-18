@@ -53,7 +53,8 @@ module.exports = {
     js: jsEntry,
     vendor: [
       'react',
-      'react-dom'
+      'react-dom',
+      'whatwg-fetch'
     ]
   },
   output: {
@@ -102,5 +103,20 @@ module.exports = {
       'node_modules'
     ]
   },
-  plugins: plugins
+  plugins: plugins,
+  devServer: {
+    contentBase: './client',
+    historyApiFallback: true,
+    port: 3001,
+    hot: true,
+    inline: true,
+    compress: isProd,
+    stats: { colors: true },
+    proxy: {
+      '/api/**' : {
+        target: 'http://localhost:3000', 
+        changeOrigin: true
+      }
+    }
+  }
 };

@@ -5,6 +5,10 @@ var app = express();
 
 app.use(bodyParser.json());
 
+app.get('/api/user', function(req, res){
+  res.json({isSuccess: true, data: {name: 'Saravanan', '_id': '53245'}});
+});
+
 app.get('*', function(req, res) {
   res.sendFile(__dirname + '/client/index.html');
 });

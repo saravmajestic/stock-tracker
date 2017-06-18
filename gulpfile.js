@@ -32,7 +32,7 @@ gulp.task('watch', function () {
   livereload.listen(); // Calling lister on livereload task, which will start listening for livereload client.
   var stream = gulp.src('client/')
   .pipe(shell([
-    'webpack -w' //add -p for minification and prod
+    'webpack-dev-server --config webpack.config.js'
     ]));
     gulp.watch(['dist/*'], ['build']);
   // gulp.watch('public/res/js/**/*.js', ['build']);
