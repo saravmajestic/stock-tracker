@@ -1,9 +1,9 @@
 import React from 'react';
-import Header from 'components/header';
+import HeaderContainer from '../containers/HeaderContainer.js';
 
 export default () => (
   <article className="home">
-    <Header title="Home" className="header-dark" />
+    <HeaderContainer type="full"/>
     Home Page
   </article>
 );

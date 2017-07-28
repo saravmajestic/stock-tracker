@@ -6,3 +6,4 @@ dist
 coverage
 __nogit
 .idea
+logs/mongo/*

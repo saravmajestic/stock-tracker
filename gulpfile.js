@@ -16,10 +16,11 @@ gulp.task('build', function(){
 //Run server after running the build - to make it serial
 gulp.task('server', ['build'], shell.task([
   'killall node &',//kill other previous node process
-//   "sudo lsof -i TCP:27017 | grep LISTEN | awk '{print $2}' | sudo xargs kill -9",//Kill mongodb
-//   'sudo mongod --dbpath ./logs/mongo/db --logpath ./logs/mongo/mongod.log --fork',//start mongodb
+  '/Users/saravanan/Desktop/redis/src/redis-server redis.conf',
+  "sudo lsof -i TCP:27017 | grep LISTEN | awk '{print $2}' | sudo xargs kill -9",//Kill mongodb
+  'sudo mongod --dbpath ./logs/mongo/db --logpath ./logs/mongo/mongod.log --fork',//start mongodb
   //'Taskkill /IM node.exe /F',
-    'forever -o out.log -e err.log --watchDirectory app --watch -c "node --debug" server.js'
+    'forever -o out.log -e err.log --watchDirectory app --watch -c "node -r dotenv/config --inspect" server.js'
 ]))
 
 // gulp.task('server', ['build'], shell.task([

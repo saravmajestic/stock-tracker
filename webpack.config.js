@@ -28,7 +28,7 @@ const plugins = [
 
 const jsEntry = [
   'index',
-  'pages/home',
+  'pages/Home',
 ];
 
 if (isProd) {
@@ -85,13 +85,13 @@ module.exports = {
             loader: 'babel-loader',
             query: {
               cacheDirectory: true,
-              presets:['es2015','react']
+              presets:['es2015', 'react', 'babel-preset-stage-1']
             }
           }
         ]
       },
       {
-        test: /\.(gif|png|jpg|jpeg\ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\.(gif|png|jpg|jpeg\ttf|eot|ico|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: 'file-loader'
       }
     ],
@@ -114,7 +114,7 @@ module.exports = {
     stats: { colors: true },
     proxy: {
       '/api/**' : {
-        target: 'http://localhost:3000', 
+        target: 'http://localhost:8080', 
         changeOrigin: true
       }
     }
