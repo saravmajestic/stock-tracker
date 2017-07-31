@@ -1,5 +1,13 @@
 var Validator = require('validator').Validator, crypto = require('crypto'), 
     bcrypt = require('bcrypt-nodejs');
+var graphql = require('graphql');
+var GraphQLObjectType = graphql.GraphQLObjectType;
+var GraphQLSchema = graphql.GraphQLSchema;
+var GraphQLString = graphql.GraphQLString;
+var GraphQLInt = graphql.GraphQLInt;
+var GraphQLNonNull = graphql.GraphQLNonNull;
+var GraphQLList = graphql.GraphQLList;
+var GraphQLID = graphql.GraphQLID;
 
 let UserSchema;
 
@@ -19,7 +27,6 @@ UserSchema.add({
 });
 
 UserSchema.set('toJSON', { getters: true });
-
 UserSchema.pre('save', function(next){
 	if(!this.created_at){
 		this.created_at = (new Date()).toISOString();
@@ -28,6 +35,64 @@ UserSchema.pre('save', function(next){
 	this.updated_at = (new Date()).toISOString();
 	next();
 });
+
+let graphQLType = null;
+UserSchema.statics.getGraphQLType = function () {
+    if(!graphQLType){ 
+        graphQLType = require(ROOT_PATH + '/app/utils').getFields(UserSchema.paths, 'User', 'User object type');
+    }
+	return graphQLType;
+};
+UserSchema.statics.getMutationQueries = function () {
+    graphQLType = this.getGraphQLType();
+    return {
+        addUser: {
+            type: graphQLType,
+            args: {
+                first_name: {
+                    name: 'first_name',
+                    type: new GraphQLNonNull(GraphQLString)
+                },
+                email: {
+                    name: 'email',
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve: (root, { email }) => {
+                var newUser = new mongoose.model('User')({ email: email });
+
+                return new Promise((resolve, reject) => {
+                    newUser.save((err, res) => {
+                        err ? reject(err) : resolve(res);
+                    });
+                });
+            }
+        }
+    };
+}
+UserSchema.statics.getGraphQLGetQueries = function () {
+    graphQLType = this.getGraphQLType();
+    return {
+        users: {
+            type: new GraphQLList(graphQLType),
+            resolve: this.getListOfUsers
+        },
+        user: {
+            type: graphQLType,
+            args: {
+            email:{
+                name: 'email',
+                type: GraphQLString
+            }
+            },
+            resolve: this.getUserByPosition
+        },
+        userByToken: {
+            type: graphQLType,
+            resolve: this.getUserByToken
+        }
+    };
+}
 /** 
  * Find user by id
  * @static

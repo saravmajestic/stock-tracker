@@ -1,5 +1,6 @@
 import axios from 'axios';
 import 'whatwg-fetch'
+import {getGraph} from './utils';
 
 //Get current user(me) from token in localStorage
 export const ME_FROM_TOKEN = 'ME_FROM_TOKEN';
@@ -65,24 +66,7 @@ export function meFromToken(tokenFromStorage) {
     payload: getGraph(payload)
   };
 }
-export function getGraph(payload){
-  let token = sessionStorage.getItem('jwtToken');
 
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  headers.append('Authorization', `Bearer ${token}`);
-  
-  var options = {
-    method: 'POST',
-    headers: headers,
-    mode: 'cors',
-    cache: 'default',
-    body: JSON.stringify(payload)
-  };
-
-  var request = new Request(`${ROOT_URL}/graphql`, options);
-  return fetch(request);
-}
 export function meFromTokenSuccess(currentUser) {
   return {
     type: ME_FROM_TOKEN_SUCCESS,
